@@ -119,7 +119,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
     {
       "chat_name": "chat_name",
-      "users": ["user1", "user2"]
+      "users": ["user_id_1", "user_id_2"]
     }
     ```
   - Пример ответа
@@ -156,7 +156,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
     Content-Type: application/json
 
     {
-      "users": ["user1", "user2"]
+      "users": ["user_id_1", "user_id_2"]
     }
     ```
   - Пример ответа
@@ -172,7 +172,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
     Content-Type: application/json
 
     {
-      "users": ["user1", "user2"]
+      "users": ["user_id_1", "user_id_2"]
     }
     ```
   - Пример ответа
