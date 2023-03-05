@@ -19,19 +19,21 @@ System_Ext(web_messanger, "Web-Мессенджер", "HTML, CSS, JavaScript", "
 
 System_Boundary(conference_site, "Мессенджер") {
    Container(auth_service, "Сервис авторизации", "C++", "Сервис управления пользователями", $tags = "microService")   
-   Container(message_service, "Сервис сообщений", "C++", "Сервис управления публичными чатами и личными сообщениями", $tags = "microservice") 
+   Container(message_service, "Сервис сообщений", "C++", "Сервис управления публичными чатами и личными сообщениями", $tags = "microservice")
+   Container(user_service, "Сервис пользователей", "C++", "Сервис поиска пользователей", $tags = "microservice")
    ContainerDb(db, "База данных", "PostgreSQL", "Хранение данных о чатах, сообщениях, и пользователях", $tags = "storage")   
 }
 
 Rel(creator, web_messanger, "Добавление и удаление участников в чата, удаление чата, изменение описания чата")
 Rel(participant, web_messanger, "Просмотр, публикация, редактирование сообщений. Выход из чата")
 Rel(user, web_messanger, "Создание чатов, отправка и редактирование личных сообщений")
-
 Rel(web_messanger, auth_service, "Работа с пользователями", "localhost/user")
 Rel(auth_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
-Rel(web_messanger, message_service, "Работа c публичными чатами и личными сообщениями", "localhost/messages/public")
+Rel(web_messanger, message_service, "Работа c публичными чатами и личными сообщениями", "localhost/messages")
 Rel(message_service, db, "INSERT/SELECT/UPDATE", "SQL")
+Rel(web_messanger, user_service, "Поиск людей через различные контакты и сервисы", "localhost/user/search")
+Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
 @enduml
 ```
