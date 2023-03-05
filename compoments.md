@@ -80,7 +80,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
           "firstname": "Bob",
           "secondname": "Rudolf",
           "email": "bob@rudolf.go"
-      }
+      } 
       ```
     - Пример ответа
       ```http
@@ -156,7 +156,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
     Content-Type: application/json
 
     {
-      users: ["user1", "user2"]
+      "users": ["user1", "user2"]
     }
     ```
   - Пример ответа
@@ -172,7 +172,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
     Content-Type: application/json
 
     {
-      users: ["user1", "user2"]
+      "users": ["user1", "user2"]
     }
     ```
   - Пример ответа
