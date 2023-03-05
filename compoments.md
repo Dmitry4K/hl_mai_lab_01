@@ -205,7 +205,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
     Content-Type: application/json
 
     {
-      "user_id": "chat_id",
+      "user_id": "user_id",
       "message": "message"
     }
     ```
