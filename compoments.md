@@ -24,7 +24,7 @@ System_Boundary(conference_site, "Мессенджер") {
    ContainerDb(db, "База данных", "PostgreSQL", "Хранение данных о чатах, сообщениях, и пользователях", $tags = "storage")   
 }
 
-Rel(creator, web_messanger, "Добавление и удаление участников в чата, удаление чата, изменение описания чата")
+Rel(creator, web_messanger, "Добавление и удаление участников в чата, удаление чата")
 Rel(participant, web_messanger, "Просмотр, публикация, редактирование сообщений. Выход из чата")
 Rel(user, web_messanger, "Создание чатов, отправка и редактирование личных сообщений")
 Rel(web_messanger, auth_service, "Авторизация", "localhost/auth")
@@ -79,7 +79,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
           "password": "qwerty123",
           "firstname": "Bob",
           "secondname": "Rudolf",
-          "email": "bob@rudolf.go
+          "email": "bob@rudolf.go"
       }
       ```
     - Пример ответа
