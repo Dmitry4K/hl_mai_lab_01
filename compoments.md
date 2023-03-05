@@ -18,59 +18,230 @@ Person(user, "Пользователь")
 System_Ext(web_messanger, "Web-Мессенджер", "HTML, CSS, JavaScript", "Веб-интерфейс")
 
 System_Boundary(conference_site, "Мессенджер") {
-   Container(auth_service, "Сервис авторизации", "C++", "Сервис управления пользователями", $tags = "microService")   
+   Container(auth_service, "Сервис авторизаций", "C++", "Сервис авторизаций пользователей", $tags = "microService")   
    Container(message_service, "Сервис сообщений", "C++", "Сервис управления публичными чатами и личными сообщениями", $tags = "microservice")
-   Container(user_service, "Сервис пользователей", "C++", "Сервис поиска пользователей", $tags = "microservice")
+   Container(user_service, "Сервис управления пользователями", "C++", "Сервис поиска пользователей", $tags = "microservice")
    ContainerDb(db, "База данных", "PostgreSQL", "Хранение данных о чатах, сообщениях, и пользователях", $tags = "storage")   
 }
 
 Rel(creator, web_messanger, "Добавление и удаление участников в чата, удаление чата, изменение описания чата")
 Rel(participant, web_messanger, "Просмотр, публикация, редактирование сообщений. Выход из чата")
 Rel(user, web_messanger, "Создание чатов, отправка и редактирование личных сообщений")
-Rel(web_messanger, auth_service, "Работа с пользователями", "localhost/user")
+Rel(web_messanger, auth_service, "Авторизация", "localhost/auth")
 Rel(auth_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
-Rel(web_messanger, message_service, "Работа c публичными чатами и личными сообщениями", "localhost/messages")
+Rel(web_messanger, message_service, "Работа c публичными чатами и личными сообщениями", "localhost/message")
 Rel(message_service, db, "INSERT/SELECT/UPDATE", "SQL")
-Rel(web_messanger, user_service, "Поиск людей через различные контакты и сервисы", "localhost/user/search")
+Rel(web_messanger, user_service, "Поиск людей, регистрация новых пользователей", "localhost/user")
 Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
 @enduml
 ```
 ## Список компонентов  
 
-### Сервис авторизации
+### Сервис авторизаций
+**API**:
+- Авторизация
+    - Пример запроса
+      ```http
+      POST /auth HTTP/1.1
+      Host: localhost
+      Content-Type: application/json
+
+      {
+        "login": "mySuperLogin",
+        "password": "qwerty123"
+      }
+      ```
+    - Пример ответа
+      ```http
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "token":"auth-token",
+        "user_id":"id"
+      }
+      ```
+
+
+### Сервис управления пользователями
 **API**:
 -	Создание нового пользователя
-      - входные параметры: login, пароль, имя, фамилия, email, обращение (г-н/г-жа)
-      - выходные параметры: отсутствуют
--	Поиск пользователя по логину
-     - входные параметры:  login
-     - выходные параметры: имя, фамилия, email, обращение (г-н/г-жа)
--	Поиск пользователя по маске имени и фамилии
-     - входные параметры: маска фамилии, маска имени
-     - выходные параметры: login, имя, фамилия, email, обращение (г-н/г-жа)
+    - Пример запроса
+      ```http
+      POST /user HTTP/1.1
+      Host: localhost
+      Content-Type: application/json
 
-### Сервис блогов
-**API**:
-- Создание блога
-  - Входные параметры: название блога, категория, аннотация, автор и дата чоздания
-  - Выходыне параметры: млентификатор блога
-- Получение списка всех блогов
-  - Входные параметры: отсутствуют
-  - Выходные параметры: массив с блогов, где для каждого указаны его идентификатор, название, категория, аннотация, автор и дата написания
+      {
+          "login": "mySuperLogin",
+          "password": "qwerty123",
+          "firstname": "Bob",
+          "secondname": "Rudolf",
+          "email": "bob@rudolf.go
+      }
+      ```
+    - Пример ответа
+      ```http
+      HTTP/1.1 200 OK
+      ```
+-	Поиск пользователя по логину, или по маске имени, или по маске фамилии, или по маске почты
+    - Пример запроса
+      ```http
+      GET /user/search?login=login&mask-first-name=firstname&mask-second-name=secondname&mask-email=email HTTP/1.1
+      Host: localhost
+      Authorization: <auth-scheme> <authorization-parameters>
+      ```
+    - Пример ответа
+      ```http
+      HTTP/1.1 200 OK
+      Content-Type: application/json
 
-### Сервис постов
+      [
+        {
+          "login": "mySuperLogin",
+          "firstname": "Bob",
+          "secondname": "Rudolf",
+          "email": "bob@rudolf.go
+        },
+      ]
+      ```
+### Сервис сообщений
 **API**:
-- Создание поста
-  - Входные параметры: заголовок поста, автор, блог, содержания поста, дата создания
-  - Выходные параметры: идентификатор поста
-- Получение списка постов в блоге
-  - Входные параметры: блог
-  - Выходные параметры: массив с постами (идентификатор, заголовок поста, автор, блог, содержания поста, дата создания)
-- Получение поста
-  - Входнае параметры: идентификатор поста
-  - Выходные парамтеры: заголовок поста, автор, блог, содержания поста, дата создани
-- Изменение поста
-  - Входные параметры: идентификатор поста, заголовок поста, автор, блог, содержания поста, дата создания
-  - Выходные параметры: отсутствуют
+- Создание чата
+  - Пример запроса
+    ```http
+    POST /message/chat HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      "chat_name": "chat_name",
+      "users": ["user1", "user2"]
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "chat_id": "chat_id"
+    }
+    ```
+- Удаление чата
+  - Пример запроса
+    ```http
+    DELETE /message/chat HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+        "chat_id": "chat_id"
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Добавление пользователей в чат
+  - Пример запроса
+    ```http
+    POST /message/chat/users&chat_id=chat_id HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      users: ["user1", "user2"]
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Удаление пользователя из чата
+  - Пример запроса
+    ```http
+    DELETE /message/chat/users&chat_id=chat_id HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      users: ["user1", "user2"]
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Создать сообщение в чат
+  - Пример запроса
+    ```http
+    POST /message HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      "chat_id": "chat_id",
+      "message": "message"
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Создать личное сообщение
+  - Пример запроса
+    ```http
+    POST /message/personal HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      "user_id": "chat_id",
+      "message": "message"
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Изменить сообщение
+  - Пример запроса
+    ```http
+    PUT /message?message_id=id HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      "message": "message"
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
+- Удалить сообщение
+  - Пример запроса
+    ```http
+    DELETE /message HTTP/1.1
+    Host: localhost
+    Authorization: <auth-scheme> <authorization-parameters>
+    Content-Type: application/json
+
+    {
+      "message_id": "id"
+    }
+    ```
+  - Пример ответа
+    ```http
+    HTTP/1.1 200 OK
+    ```
