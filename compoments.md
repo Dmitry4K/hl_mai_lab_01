@@ -103,7 +103,7 @@ Rel(user_service, db, "INSERT/SELECT/UPDATE", "SQL")
           "login": "mySuperLogin",
           "firstname": "Bob",
           "secondname": "Rudolf",
-          "email": "bob@rudolf.go
+          "email": "bob@rudolf.go"
         },
       ]
       ```
