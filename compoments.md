@@ -11,33 +11,28 @@
 AddElementTag("microService", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="microservice")
 AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
 
-Person(admin, "Администратор")
-Person(moderator, "Модератор")
+Person(creator, "Создатель чата")
+Person(participant, "Участник чата")
 Person(user, "Пользователь")
 
-System_Ext(web_site, "Клиентский веб-сайт", "HTML, CSS, JavaScript, React", "Веб-интерфейс")
+System_Ext(web_messanger, "Web-Мессенджер", "HTML, CSS, JavaScript", "Веб-интерфейс")
 
-System_Boundary(conference_site, "Сайт блогов") {
+System_Boundary(conference_site, "Мессенджер") {
    'Container(web_site, "Клиентский веб-сайт", ")
-   Container(client_service, "Сервис авторизации", "C++", "Сервис управления пользователями", $tags = "microService")    
-   Container(post_service, "Сервис постов", "C++", "Сервис управления блогами", $tags = "microService") 
-   Container(blog_service, "Сервис блогов", "C++", "Сервис управления постами", $tags = "microService")   
-   ContainerDb(db, "База данных", "MySQL", "Хранение данных о блогах, постах и пользователях", $tags = "storage")
-   
+   Container(auth_service, "Сервис авторизации", "C++", "Сервис управления пользователями", $tags = "microService")   
+   Container(message_service, "Сервис сообщений", "C++", "Сервис управления публичными чатами и личными сообщениями", $tags = "microservice") 
+   ContainerDb(db, "База данных", "PostgreSQL", "Хранение данных о чатах, сообщениях, и пользователях", $tags = "storage")   
 }
 
-Rel(admin, web_site, "Просмотр, добавление и редактирование информации о пользователях, конференциях и докладах")
-Rel(moderator, web_site, "Модерация контента и пользователей")
-Rel(user, web_site, "Регистрация, просмотр информации о конференциях и докладах и запись на них")
+Rel(creator, web_messanger, "Добавление и удаление участников в чата, удаление чата, изменение описания чата")
+Rel(participant, web_messanger, "Просмотр, публикация, редактирование сообщений. Выход из чата")
+Rel(user, web_messanger, "Создание чатов, отправка и редактирование личных сообщений")
 
-Rel(web_site, client_service, "Работа с пользователями", "localhost/person")
-Rel(client_service, db, "INSERT/SELECT/UPDATE", "SQL")
+Rel(web_messanger, auth_service, "Работа с пользователями", "localhost/user")
+Rel(auth_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
-Rel(web_site, post_service, "Работа с постами", "localhost/pres")
-Rel(post_service, db, "INSERT/SELECT/UPDATE", "SQL")
-
-Rel(web_site, blog_service, "Работа с блогами", "localhost/conf")
-Rel(blog_service, db, "INSERT/SELECT/UPDATE", "SQL")
+Rel(web_messanger, message_service, "Работа c публичными чатами и личными сообщениями", "localhost/messages/public")
+Rel(message_service, db, "INSERT/SELECT/UPDATE", "SQL")
 
 @enduml
 ```
