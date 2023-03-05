@@ -18,7 +18,6 @@ Person(user, "Пользователь")
 System_Ext(web_messanger, "Web-Мессенджер", "HTML, CSS, JavaScript", "Веб-интерфейс")
 
 System_Boundary(conference_site, "Мессенджер") {
-   'Container(web_site, "Клиентский веб-сайт", ")
    Container(auth_service, "Сервис авторизации", "C++", "Сервис управления пользователями", $tags = "microService")   
    Container(message_service, "Сервис сообщений", "C++", "Сервис управления публичными чатами и личными сообщениями", $tags = "microservice") 
    ContainerDb(db, "База данных", "PostgreSQL", "Хранение данных о чатах, сообщениях, и пользователях", $tags = "storage")   
